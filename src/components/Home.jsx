@@ -4,14 +4,14 @@ import TokenContext from './context/TokenContext';
 /* import FetchData from './FetchData.jsx' */
 
 
-const Home = ({accessToken, setAccessToken}) => {
+const Home = ({accessToken, setAccessToken, user, setUser, username, setUsername}) => {
 
     return (
         <>
-            <div>Welcome to the Lokker Room</div>
+            <h1>Welcome to the Lokker Room</h1>
             {accessToken ? 
              "" 
-            : <LoginForm setAccessToken={setAccessToken} />}
+            : <LoginForm setAccessToken={setAccessToken} user={user} setUser={setUser} username={username} setUsername={setUsername} />}
         </>
     );
 };

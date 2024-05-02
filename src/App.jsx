@@ -11,7 +11,6 @@ function App() {
   return (
     <>
       <Outlet />
-      <div>This is the place of the footer</div> 
     </>
   )
 }

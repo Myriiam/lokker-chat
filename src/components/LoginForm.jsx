@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form"
 import { Link, useNavigate }  from 'react-router-dom'
 
 
-const LoginForm = ({setAccessToken}) => {
+const LoginForm = ({setAccessToken, setUser, setUsername}) => {
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
     console.log(errors);
     const navigate = useNavigate();
@@ -24,12 +24,19 @@ const LoginForm = ({setAccessToken}) => {
             console.log(response);
             if (response.ok) {
                 const  accessToken  = await response.json();
-                //console.log(accessToken);
+                console.log(accessToken);
                 const token = accessToken.accessToken;
+                const userConnected = accessToken.result.id;
+                const usernameConnected = accessToken.result.nickname;
                 //console.log(token);
+                console.log(userConnected);
                 setAccessToken(token);
+                setUser(userConnected);
+                setUsername(usernameConnected);
 
                 localStorage.setItem('accessToken', token);
+                localStorage.setItem('userId', userConnected);
+                localStorage.setItem('userId', usernameConnected);
                 navigate("/chat");
 
                 /* await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -47,30 +54,29 @@ const LoginForm = ({setAccessToken}) => {
 
     return (
         <>  
-            <div className="">   
-                <div className="">
-                    <div className="">
-                        <h2 className="">Log In</h2>
-                        <form className="" onSubmit={handleSubmit(onSubmit)}>
-                            <input {...register("email", { required: "The email is required" })} className='email' type='email' placeholder='Email'/>
-                            <p className=''>{errors.email && errors.email.message}</p>
-                            <input {...register("password", { required: "The password is required" })} className='pwd' type='password' placeholder='Password'/>
-                            <p className=''>{errors.password && errors.password.message}</p>
-                            <button className='submit-btn' disabled={isSubmitting} type='submit'>
-                                {isSubmitting ? "Loading..." : "Submit"}
-                            </button>
-                        </form>
-                        <div className="">
-                            <Link to="#" className="">Forgot Your Password ?</Link>
-                            <div className="">
-                                <p>Don't Have An Account ?</p>
-                                <Link to="/register" className="">Sign Up</Link>
-                            </div>
+            <div className='login-container'>
+                <div className="login-main">
+                    <h2 className="login">Log In</h2>
+                    <form className="form-login" onSubmit={handleSubmit(onSubmit)}>
+                        <input {...register("email", { required: "The email is required" })} className='email' type='email' placeholder='Email'/>
+                        <p className=''>{errors.email && errors.email.message}</p>
+                        <input {...register("password", { required: "The password is required" })} className='pwd' type='password' placeholder='Password'/>
+                        <p className=''>{errors.password && errors.password.message}</p>
+                        <button className='submit-login' disabled={isSubmitting} type='submit'>
+                            {isSubmitting ? "Loading..." : "Submit"}
+                        </button>
+                    </form>
+                    <div className="login-add-info">
+                        <Link to="#" className="forgot-pwd">Forgot Your Password ?</Link>
+                        <div className="add-info">
+                            <p>Don't Have An Account ?</p>
+                            <Link to="/register" className="sign">Sign Up</Link>
                         </div>
                     </div>
                 </div>
             </div>
-
+         
+          
         {/* <div className="login-page bg-black min-h-screen flex flex-col items-center justify-center">
             <div className="w-96 p-8 bg-gray-800 rounded-lg shadow-lg">
                 <h2 className="text-3xl font-semibold text-white mb-6">Sign In</h2>

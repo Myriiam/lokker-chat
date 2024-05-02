@@ -2,22 +2,25 @@ import React, {useContext} from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 
-const Navbar = ({accessToken, setAccessToken}) => {
+const Navbar = ({accessToken, setAccessToken, user, setUser}) => {
 
     const navigate = useNavigate();
 
     const logout = () => {
         localStorage.removeItem("accessToken");
         setAccessToken(null);
+        localStorage.removeItem("userId");
+        setUser(null);
         navigate("");
     }
 
     return (
         <>              
-            <nav className=''>
-                <div className=''>
-                    <NavLink to=""  style={({ isActive }) => {return isActive ? { color: "red", textDecoration: "underline" } : {}; }}>Home</NavLink>
-                    {accessToken ? "" : <NavLink to="/register" style={({ isActive }) => {return isActive ? { color: "red", textDecoration: "underline" } : {}; }}>Register</NavLink>}
+            <nav className='navigation'>
+                <div className='links'>
+                    <NavLink to=""  className="link" style={({ isActive }) => {return isActive ? { color: "plum", textDecoration: "underline" } : {}; }}>Home</NavLink>
+                    {accessToken ? "" : <NavLink to="/register" className="link" style={({ isActive }) => {return isActive ? { color: "plum", textDecoration: "underline" } : {}; }}>Register</NavLink>}
+                    {accessToken ? <NavLink to="/chat" className="link" style={({ isActive }) => {return isActive ? { color: "plum", textDecoration: "underline" } : {}; }}>Chat</NavLink> :""}
                     {accessToken ? <button onClick={logout}>Logout</button> : ""}
                 </div>
             </nav>

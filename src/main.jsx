@@ -16,12 +16,14 @@ import Navbar from './components/Navbar.jsx'
 const Root = () => {
 
   const [accessToken, setAccessToken] = useState(null);
+  const [user, setUser] = useState(null);
+  const [username, setUsername] = useState(null);
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
         <>
-        <Navbar accessToken={accessToken} setAccessToken={setAccessToken} />
+        <Navbar accessToken={accessToken} setAccessToken={setAccessToken} user={user} setUser={setUser} />
           <App />
         </>
       ),
@@ -30,7 +32,7 @@ const Root = () => {
           path: "",
           element: (
             <>
-              <Home accessToken={accessToken} setAccessToken={setAccessToken} />
+              <Home accessToken={accessToken} setAccessToken={setAccessToken} user={user} setUser={setUser} username={username} setUsername={setUsername} />
             </>
           ),
         },
@@ -38,8 +40,8 @@ const Root = () => {
           path: "chat",
           element: (
             <>
-              <PrivateRoutes accessToken={accessToken} setAccessToken={setAccessToken}/>
-              <ChatRoom accessToken={accessToken} setAccessToken={setAccessToken} />
+              <PrivateRoutes accessToken={accessToken} setAccessToken={setAccessToken} />
+              <ChatRoom accessToken={accessToken} setAccessToken={setAccessToken} user={user} setUser={setUser} />
             </>
           )
         },

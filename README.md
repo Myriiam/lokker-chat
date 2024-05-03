@@ -1,4 +1,4 @@
-# Lokker Room - Chat Application
+# Lokker Chat - Chat Application
 
 ## About
 This is a chat application.  

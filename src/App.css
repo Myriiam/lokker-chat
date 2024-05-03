@@ -139,6 +139,7 @@ h3 {
 
 .all-messages {
   height: 510px;
+  overflow-y: auto;
   margin: 20px;
 }
 

@@ -36,7 +36,7 @@ const LoginForm = ({setAccessToken, setUser, setUsername}) => {
 
                 localStorage.setItem('accessToken', token);
                 localStorage.setItem('userId', userConnected);
-                localStorage.setItem('userId', usernameConnected);
+                localStorage.setItem('username', usernameConnected);
                 navigate("/chat");
 
                 /* await new Promise((resolve) => setTimeout(resolve, 1000));

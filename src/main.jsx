@@ -15,15 +15,15 @@ import Navbar from './components/Navbar.jsx'
 
 const Root = () => {
 
-  const [accessToken, setAccessToken] = useState(null);
-  const [user, setUser] = useState(null);
-  const [username, setUsername] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);  //token
+  const [user, setUser] = useState(null); //id of logged in user
+  const [username, setUsername] = useState(null); //nickname of logged in user
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
         <>
-        <Navbar accessToken={accessToken} setAccessToken={setAccessToken} user={user} setUser={setUser} />
+        <Navbar accessToken={accessToken} setAccessToken={setAccessToken} user={user} setUser={setUser} username={username} setUsername={setUsername}/>
           <App />
         </>
       ),

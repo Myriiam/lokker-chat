@@ -10,11 +10,12 @@ import { IoSend } from "react-icons/io5";
 
 const ChatRoom = ({ accessToken, setAccessToken, user, setUser, username, setUsername }) => {
 
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm();
 
-    //  const {dataApi} = useContext(DataContext);
-    const [dataApi, setDataApi] = useState([]);
+    const [dataApi, setDataApi] = useState([]); //get users from the same lobby
     const [messagesApi, setMessagesApi] = useState([]);
+    const userId = localStorage.getItem("userId");
+   // console.log(userId);
 
     const options = {
         method: 'GET',
@@ -26,11 +27,9 @@ const ChatRoom = ({ accessToken, setAccessToken, user, setUser, username, setUse
 
     useEffect(() => {
         const getUsers = async () => {
-            //console.log(options)
             try {
                 const URL = "https://lokker-room-3ce86819d936.herokuapp.com/api/users";
                 const response = await fetch(URL, options);
-            // console.log(response.json())
 
                 // Check if the request was successful
                 if (response.ok) {
@@ -42,19 +41,19 @@ const ChatRoom = ({ accessToken, setAccessToken, user, setUser, username, setUse
                 const data = JSON.parse(responseData);
                 console.log(data);
                 setDataApi(data);
+                getMessages(data[0].lobby_id);
+                postMessages(data[0].lobby_id);
             } catch (err) {
                 console.log("Error in fetching user data", err);
             }
         }
 
         const getMessages = async (lobbyId) => {
-            //console.log(options)
-            console.log(dataApi)
-
             try {
                 const URL = `https://lokker-room-3ce86819d936.herokuapp.com/api/lobby/${lobbyId}`;
                 const response = await fetch(URL, options);
-            
+               // console.log(dataApi.length());
+
                 // Check if the request was successful
                 if (response.ok) {
                     console.log(`${response.status} ${response.statusText}`);
@@ -63,7 +62,6 @@ const ChatRoom = ({ accessToken, setAccessToken, user, setUser, username, setUse
                 const responseData = await response.text();
                 const data = JSON.parse(responseData);
                 console.log(data);
-                console.log(user);
                 setMessagesApi(data);
             } catch (err) {
                 console.log("Error in fetching user data", err);
@@ -71,12 +69,9 @@ const ChatRoom = ({ accessToken, setAccessToken, user, setUser, username, setUse
         } 
 
         getUsers();
-
-        if (dataApi.length > 0) {
+        // if (dataApi.length > 0) {
             // Call getMessages with the lobby_id from dataApi
-            getMessages(dataApi[0].lobby_id);
-            postMessages(dataApi[0].lobby_id);
-        }
+        // }
     }, [accessToken]); 
 
     const postMessages = async (data) => {
@@ -89,11 +84,17 @@ const ChatRoom = ({ accessToken, setAccessToken, user, setUser, username, setUse
                     Authorization: `Bearer ${accessToken}`
                 },
             });
-            console.log(data);
+            
             console.log(response);
             if (response.ok) {
                 const  messageSent  = await response.json();
                 console.log(messageSent);
+                console.log(data);
+                console.log(messagesApi);
+                
+                setMessagesApi([...messagesApi, data]);
+                console.log(messagesApi);
+                reset();
             } else {
                 const { error } = await response.json();
             }
@@ -113,23 +114,37 @@ const ChatRoom = ({ accessToken, setAccessToken, user, setUser, username, setUse
                     </div>
                     <div className='users-side'>
                         <h3>Users In My Lobby</h3>
-                        {dataApi.map((userInfo, index) => ( 
-                            <p className='user-name' key={index}>{userInfo.lobby_id} {userInfo.nickname}</p>
-                        ))} 
+                      { dataApi.length > 0 ? ( 
+                        <>
+                            <h4> Team {dataApi[0].lobby_id}</h4>
+                            {dataApi.map((userInfo, index) => ( 
+                                <p className='user-name' key={index}>{userInfo.lobby_id} {userInfo.nickname}</p>
+                            ))}
+                        </>
+                        ) : (
+                            <>
+                                <p>No members in this lobby at the moment</p>
+                            </>
+                        )
+                      }
                     </div>
                     <div className='messages-side'>
                         <div className='all-messages'>
-                            {messagesApi.map((message, index) => ( 
-                               
-                                message.user === user ? (
-                                    <p className='msg-content' style={{ border: '2px solid #76589a', backgroundColor: '#ba9cba' }} key={index}>{message.content}</p>
+                            {messagesApi.length > 0 ? (
+                                messagesApi.map((message, index) => ( 
+                                    message.user == userId ? (
+                                        <p className='msg-content' style={{ border: '2px solid #76589a', backgroundColor: '#ba9cba' }} key={index}>{message.content}</p>
+                                    ) : (
+                                            <>  
+                                                <p>{message.username} : </p>
+                                                <p className='msg-content' key={index}>{message.content}</p>
+                                            </>
+                                    )
+                                ))
                                 ) : (
-                                        <>  
-                                            <p>{message.username} : </p>
-                                            <p className='msg-content' key={index}>{message.content}</p>
-                                        </>
-                                )
-                            ))} 
+                                    <p>No messages in this lobby at the moment !</p>
+                                )   
+                            }
                         </div>
                         <form className="message-container" onSubmit={handleSubmit(postMessages)}>
                             <input {...register("content", { required: true })} className='input-message' name="content" type='text' placeholder='Your message here ...'/>

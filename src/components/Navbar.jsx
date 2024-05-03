@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 
-const Navbar = ({accessToken, setAccessToken, user, setUser}) => {
+const Navbar = ({accessToken, setAccessToken, user, setUser, username, setUsername}) => {
 
     const navigate = useNavigate();
 
@@ -11,6 +11,8 @@ const Navbar = ({accessToken, setAccessToken, user, setUser}) => {
         setAccessToken(null);
         localStorage.removeItem("userId");
         setUser(null);
+        localStorage.removeItem("username");
+        setUsername(null);
         navigate("");
     }
 
